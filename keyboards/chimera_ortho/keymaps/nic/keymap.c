@@ -37,7 +37,9 @@ enum custom_keycodes {
   KC_PUSH,
   KC_SCAP,
   KC_SCOF,
-  KC_PUSHUP
+  KC_PUSHUP,
+  KC_DCSHELL,
+  KC_DCBUILD
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -106,9 +108,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-------+-------+-------+-------+-------+-------+-------.     ,-------+-------+-------+-------+-------+-------+-------.
      _______,_______,_______,_______,_______,_______,_______,      _______,_______,_______,KC_INCL,_______,_______,_______,
   //|-------+-------+-------+-------+-------+-------+-------|     |-------+-------+-------+-------+-------+-------+-------|
-     _______,_______,_______,KC_CAD ,_______,_______,_______,      _______,_______,_______,_______,KC_LOCK,_______,_______,
+     _______,_______,KC_DCSHELL,KC_CAD ,_______,_______,_______,      _______,_______,_______,_______,KC_LOCK,_______,_______,
   //|-------+-------+-------+-------+-------+-------+-------|     |-------+-------+-------+-------+-------+-------+-------|
-     KC_SCAP,_______,_______,_______,_______,_______,_______,      _______,_______,_______,KC_PULL,KC_PUSH,KC_PUSHUP,KC_SCAP,
+     KC_SCAP,_______,_______,_______,_______,KC_DCBUILD,_______,      _______,_______,_______,KC_PULL,KC_PUSH,KC_PUSHUP,KC_SCAP,
   //|-------+-------+-------+-------+-------+-------+-------|     |-------+-------+-------+-------+-------+-------+-------|
                                      _______,_______,                      _______,_______
   // \------------------------------+-------+-------+------/       \------+-------+-------+------------------------------/
@@ -152,6 +154,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case KC_PUSHUP:
       if (record->event.pressed){
         SEND_STRING("git push -u origin $(git symbolic-ref --short HEAD)" SS_TAP(X_ENTER));
+      }
+      return false;
+    case KC_DCSHELL:
+      if (record->event.pressed){
+        SEND_STRING("docker-compose exec $COMPOSE_DEFAULT_SERVICE sh" SS_TAP(X_ENTER));
+      }
+      return false;
+    case KC_DCBUILD:
+      if (record->event.pressed){
+        SEND_STRING("time docker-compose build" SS_TAP(X_ENTER));
       }
   }
   return true;
